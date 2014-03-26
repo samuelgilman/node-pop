@@ -1,0 +1,13 @@
+{
+  "name": "node-pop",
+  "version": "0.0.1",
+  "private": false,
+  "engines": {
+    "node": "*",
+    "npm":  "*"
+  },
+  "dependencies": {
+    "redis" : "0.10.0",
+    "moderate" : "1.1.1"
+  }
+}
