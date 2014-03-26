@@ -42,8 +42,14 @@ module.exports = {
   
             that.moderateAdd(mem);           
 
-            worker(mem, function () {
-              that.moderateDel(mem);
+            worker(mem, function (nextMem, next) {
+        
+              if (nextMem && next) {
+                that.queue(nextMem, next);
+              } else {
+                that.moderateDel(mem);
+              }
+
             });
 
           }
@@ -80,7 +86,7 @@ module.exports = {
     var redis = that.redis;
     var config = that.config;
     var redisConfig = config.redis
-    var set = redisConfig.set;
+    var set = redisConfig.spop;
 
     redis.scard(set, function (err, scard) {
 
@@ -145,6 +151,20 @@ module.exports = {
 
     moderate.del(mem);
     log('MODERATE_DEL * mem -> ' + mem);
+
+  },
+
+  queue: function (mem, next) {
+    
+    var that = this;
+    var redis = that.redis;
+    var config = that.config;
+    var redisConfig = config.redis;
+    var set = redisConfig.sadd;
+    
+    redis.sadd(set, mem, function (err) {
+      next(err);
+    });
 
   }
 

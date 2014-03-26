@@ -32,8 +32,6 @@ module.exports = {
 
   initRedis: function (next) {
 
-    // this is not needed if db is passed
- 
     var that = this;
     var app = that.app;
     var config = app.config;
