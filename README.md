@@ -23,7 +23,6 @@ node-pop is a Node.js worker that parallelizes processing a function that is io 
         redis: {
           client: false,
           spop: 'set-to-spop',
-          sadd: 'set-to-sadd',
           host: '127.0.0.1',
           port: '6379',
           pass: 'password',
@@ -38,7 +37,7 @@ node-pop is a Node.js worker that parallelizes processing a function that is io 
         
       },
 
-      worker: function (mem, done) {
+      worker: function (mem, done, queue) {
         // custom logic here
         done(mem, function (err) {
           if (err) { console.log(err); }
@@ -61,7 +60,7 @@ node-pop is a Node.js worker that parallelizes processing a function that is io 
 
 #### Redis
 
-This is the config for redis. If you already have a connection pass it as client. Otherwise pass in host, port, pass, and db. spop The set node-pop will spop from. sadd is the set node-pop will sadd (queue).
+This is the config for redis. If you already have a connection pass it as client. Otherwise pass in host, port, pass, and db. spop is the set node-pop will spop from.
 
     redis: {
       client: false, // pass in connection
@@ -88,7 +87,7 @@ Moderate is what parallelizes everything. Interval is how often it should check 
 
 The work returns whatever was spoped. This is where you do you custom processing. When done make sure to call the callback done so that node-pop knows it can go get another. If this worker needs to queue another pass the mem with done and node-pop will queue it in the set specified in the redis config.
 
-    worker: function (mem, done) {
+    worker: function (mem, done, queue) {
       // maybe the mem is an _id so find in mongo
       // process doc
       // when finished call done
@@ -98,6 +97,18 @@ The work returns whatever was spoped. This is where you do you custom processing
       });
     },
 
+#### Queue
+
+Queue other jobs with processing the current job.
+
+    worker: function (mem, done, queue) {
+
+        queue('next-set', member, function (err) {
+          // handle err
+          // continue
+        });
+
+    }
 
 #### Log
 

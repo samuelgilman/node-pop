@@ -30,7 +30,6 @@ module.exports = {
   run: function (next) {
 
     var that = this;
-    var worker = that.worker;
 
     that.ready(function (ready) {
 
@@ -42,14 +41,10 @@ module.exports = {
   
             that.moderateAdd(mem);           
 
-            worker(mem, function (nextMem, next) {
-        
-              if (nextMem && next) {
-                that.queue(nextMem, next);
-              } else {
-                that.moderateDel(mem);
-              }
-
+            that.worker(mem, function () {
+              that.moderateDel(mem);
+            }, function (params, next) {
+              that.queue(params, next);
             });
 
           }
@@ -154,13 +149,12 @@ module.exports = {
 
   },
 
-  queue: function (mem, next) {
+  queue: function (params, next) {
     
     var that = this;
     var redis = that.redis;
-    var config = that.config;
-    var redisConfig = config.redis;
-    var set = redisConfig.sadd;
+    var set = params.set;
+    var mem = params.mem;
     
     redis.sadd(set, mem, function (err) {
       next(err);
