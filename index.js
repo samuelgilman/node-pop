@@ -44,7 +44,7 @@ module.exports = {
             that.worker(mem, function (mem) {
               that.moderateDel(mem)
             }, function (params, next) {
-              that.queue();
+              that.queue(params, next);
             });
 
           }
