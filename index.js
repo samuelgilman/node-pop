@@ -40,12 +40,7 @@ module.exports = {
           if (mem) {
   
             that.moderateAdd(mem);           
-
-            that.worker(mem, function () {
-              that.moderateDel(mem);
-            }, function (params, next) {
-              that.queue(params, next);
-            });
+            that.worker(mem, that.moderateDel, that.queue); 
 
           }
 

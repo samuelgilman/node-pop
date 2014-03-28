@@ -38,10 +38,7 @@ node-pop is a Node.js worker that parallelizes processing a function that is io 
       },
 
       worker: function (mem, done, queue) {
-        // custom logic here
-        done(mem, function (err) {
-          if (err) { console.log(err); }
-        });
+        done(mem); 
       },
 
       log: function (mes) {
@@ -65,7 +62,6 @@ This is the config for redis. If you already have a connection pass it as client
     redis: {
       client: false, // pass in connection
       spop: 'set-to-spop', // set to spop
-      sadd: 'set-to-sadd', // set to sadd (queue)
       host: '127.0.0.1', // host if no client
       port: '6379', // port if not client
       pass: 'password', // password if not client
@@ -88,13 +84,10 @@ Moderate is what parallelizes everything. Interval is how often it should check 
 The work returns whatever was spoped. This is where you do you custom processing. When done make sure to call the callback done so that node-pop knows it can go get another. If this worker needs to queue another pass the mem with done and node-pop will queue it in the set specified in the redis config.
 
     worker: function (mem, done, queue) {
-      // maybe the mem is an _id so find in mongo
-      // process doc
-      // when finished call done
-      // done can also queue the next member
-      done(mem, function (err) {
-        if (err) { console.log(err); }
-      });
+      // custom logic here
+      // tell node-pop when done 
+      done(mem); 
+
     },
 
 #### Queue
@@ -102,11 +95,12 @@ The work returns whatever was spoped. This is where you do you custom processing
 Queue other jobs with processing the current job.
 
     worker: function (mem, done, queue) {
-
-        queue('next-set', member, function (err) {
-          // handle err
-          // continue
-        });
+      
+      // proces member
+      queue('next-set', member, function (err) {
+        // queue next member
+        // call done()
+      });
 
     }
 
