@@ -1,8 +1,6 @@
-node-pop
-========
+## node-pop
 
 node-pop is a Node.js worker that parallelizes processing a function that is io bound.
-
 
 ### Install
 
@@ -37,8 +35,8 @@ node-pop is a Node.js worker that parallelizes processing a function that is io 
         
       },
 
-      worker: function (mem, done, queue) {
-        done(mem); 
+      worker: function (mem) {
+        // custom logic
       },
 
       log: function (mes) {
@@ -81,29 +79,29 @@ Moderate is what parallelizes everything. Interval is how often it should check 
 
 #### Worker
 
-The work returns whatever was spoped. This is where you do you custom processing. When done make sure to call the callback done so that node-pop knows it can go get another. If this worker needs to queue another pass the mem with done and node-pop will queue it in the set specified in the redis config.
+The work returns whatever was spoped such as an id. This is where you do you custom processing. When done make sure to call ddone so that node-pop can clear what you just processed. 
 
-    worker: function (mem, done, queue) {
-      // custom logic here
-      // tell node-pop when done 
-      done(mem); 
-
-    },
+    worker: function (mem) {
+      // process mem with custom logic
+      // call done to clear the mem from nodePop 
+      nodePop.done(mem);
+    }
 
 #### Queue
 
-Queue other jobs with processing the current job.
+Queue new jobs while processing members.
 
-    worker: function (mem, done, queue) {
-      
-      // proces member
-      queue('next-set', member, function (err) {
-        // queue next member
-        // call done()
-      });
-
-    }
+    nodePop.queue({
+      set: 'redis-set',
+      mem: mem
+    }, function (err) {
+      if (err) { console.log(err) ;}
+    });
 
 #### Log
 
-Pass in console.log or whatever logger you want if you want to check the status of node-pop such as hom many are currently processing, the current limit, and how many members are in the set.
+Log returns the current status of nodePop and moderate such as active and processing memebers.
+
+    log: function (mes) {
+      console.log(mes);
+    }
