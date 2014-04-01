@@ -40,12 +40,7 @@ module.exports = {
           if (mem) {
   
             that.moderateAdd(mem);           
-
-            that.worker(mem, function (mem) {
-              that.moderateDel(mem)
-            }, function (params, next) {
-              that.queue(params, next);
-            });
+            that.worker(mem);
 
           }
 
@@ -135,6 +130,13 @@ module.exports = {
     });
 
     that.run();
+
+  },
+
+  done: function (mem) {
+  
+    var that = this;
+    that.moderateDel(meme);
 
   },
 
