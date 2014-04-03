@@ -2,6 +2,8 @@
 
 node-pop is a Node.js worker that parallelizes processing a function that is io bound.
 
+Or jsut get http://github.com/samuelgilman/node-pop-worker. It bootstraps everything below. Or use node-pop in a custom way in your application.
+
 ### An example node-pop worker.
 
     mkdir worker
