@@ -3,12 +3,12 @@ module.exports = {
   init: function (params, app, next) {
 
     var that = this;
+    var job = params.job;
     var config = params.config;
     var log = params.log;
-    var worker = params.worker;
  
     app.log = log;
-    app.worker = worker;
+    app.job = job;
     app.config = config;
     that.app = app;    
 

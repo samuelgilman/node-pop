@@ -25,7 +25,7 @@ Edit your package.json file like this:
          "npm":  "*"
       },
       "dependencies": {
-        "node-pop" : "1.1.2"
+        "node-pop" : "1.2.0"
       }
     }
 
@@ -104,7 +104,12 @@ Edit log.js to someting like this:
     module.exports = function (mes) {
       console.log(mes);
     };
-    
+
+#### Try it out.
+
+Now that everything is in place you can start your worker.
+
+    $ node worker.js
 
 ### Flusing out your job.
 

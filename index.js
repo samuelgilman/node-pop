@@ -40,7 +40,7 @@ module.exports = {
           if (mem) {
   
             that.moderateAdd(mem);           
-            that.worker(mem);
+            that.job.process(mem);
 
           }
 
